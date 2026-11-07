@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "name": "${mod_name}",
+  "version": "${mod_version}",
+  "authors": ["Polyfrost"],
+  "license": "All-Rights-Reserved",
+  "environment": "client",
+  "entrypoints": {
+    "preLaunch": ["org.polyfrost.flashbacklegacy.FlashbackLegacy"],
+    "client": ["org.polyfrost.flashbacklegacy.FlashbackLegacyClient"]
+  },
+  "mixins": ["flashback_legacy.mixins.json"],
+  "depends": {
+    "minecraft": "1.8.9",
+    "fabricloader": ">=${loader_version}",
+    "pylon": "*",
+    "java": ">=25"
+  },
+  "custom": {
+    "flashback_legacy:target": {
+      "version": "${flashback_version}",
+      "mc": "${flashback_mc}",
+      "url": "${flashback_url}",
+      "sha1": "${flashback_sha1}"
+    }
+  }
+}

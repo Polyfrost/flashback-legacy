@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "org.polyfrost.flashbacklegacy.mixin.flashback",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "AsyncFileDialogsMixin",
+    "RecoverRecordingsScreenAccessor",
+    "ReplayCombinerMixin",
+    "SaveReplayScreenInvoker",
+    "FilePlayerSkinAccessor",
+    "ExportJobMixin",
+    "FlashbackMixin",
+    "RecorderMixin",
+    "ReplayUIMixin",
+    "UtilsMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
