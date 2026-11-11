@@ -3,6 +3,7 @@
   "id": "${mod_id}",
   "name": "${mod_name}",
   "version": "${mod_version}",
+  "description": "Effective Flashback port for 1.8.9 Fabric / Ornithe.",
   "authors": ["Polyfrost"],
   "license": "All-Rights-Reserved",
   "environment": "client",
