@@ -18,6 +18,9 @@
     "pylon": "*",
     "java": ">=25"
   },
+  "breaks": {
+    "flashback": "*"
+  },
   "custom": {
     "flashback_legacy:target": {
       "version": "${flashback_version}",
