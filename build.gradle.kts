@@ -1,9 +1,13 @@
+import net.ltgt.gradle.errorprone.errorprone
+
 import java.net.URI
 import java.security.MessageDigest
 
 plugins {
     id("net.fabricmc.fabric-loom-remap") version "1.17-SNAPSHOT"
     id("ploceus") version "1.17.4"
+    id("net.ltgt.errorprone") version "5.1.1"
+    id("com.diffplug.spotless") version "8.11.0"
 }
 
 val modid = property("mod.id") as String
@@ -52,6 +56,8 @@ dependencies {
 
     include(implementation("org.joml:joml:1.10.9")!!)
     include(implementation("com.mojang:datafixerupper:10.0.21") { isTransitive = false })
+
+    errorprone("com.google.errorprone:error_prone_core:2.51.0")
 }
 
 loom {
@@ -67,8 +73,23 @@ java {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    options.encoding = "UTF-8"
-    options.release = 25
+    options.apply {
+        encoding = "UTF-8"
+        release = 25
+
+        errorprone {
+            disableAllChecks = true
+            error("UnnecessarilyFullyQualified")
+        }
+    }
+    finalizedBy("spotlessJavaCheck")
+}
+
+spotless {
+    java {
+        importOrder("", "javax", "java", "\\#")
+        removeUnusedImports()
+    }
 }
 
 tasks.processResources {
