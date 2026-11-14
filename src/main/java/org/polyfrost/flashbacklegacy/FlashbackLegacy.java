@@ -1,15 +1,9 @@
 package org.polyfrost.flashbacklegacy;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.time.Duration;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HexFormat;
@@ -35,16 +29,14 @@ public final class FlashbackLegacy implements PreLaunchEntrypoint {
         CustomValue.CvObject target = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow()
                 .getMetadata().getCustomValue(MOD_ID + ":target").getAsObject();
         String version = target.get("version").getAsString();
-        String url = target.get("url").getAsString();
         String sha1 = target.get("sha1").getAsString();
-        Path dir = FabricLoader.getInstance().getGameDir().resolve("flashback-legacy");
+        Path dir = FabricLoader.getInstance().getGameDir().resolve("flashback");
 
         try {
             Files.createDirectories(dir);
             Path jar = findJar(dir, sha1);
-            if (jar == null) jar = download(dir, url, sha1);
             if (jar == null) {
-                LOGGER.error("No Flashback jar found. Download Flashback {} from {} and place it in {}", version, url, dir);
+                LOGGER.error("No Flashback jar found. Put Flashback {} for MC {} in {}", version, target.get("mc").getAsString(), dir);
                 return;
             }
             if (!sha1.equals(sha1(jar))) {
@@ -71,34 +63,6 @@ public final class FlashbackLegacy implements PreLaunchEntrypoint {
             }
         }
         return found;
-    }
-
-    private static Path download(Path dir, String url, String sha1) {
-        Path target = dir.resolve(url.substring(url.lastIndexOf('/') + 1));
-        Path part = dir.resolve(target.getFileName() + ".part");
-        LOGGER.info("Downloading {}", url);
-        try (HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build()) {
-            HttpResponse<Path> response = client.send(
-                    HttpRequest.newBuilder(URI.create(url)).timeout(Duration.ofMinutes(2)).build(),
-                    HttpResponse.BodyHandlers.ofFile(part));
-            if (response.statusCode() != 200) {
-                LOGGER.error("Flashback download failed: HTTP {}", response.statusCode());
-                return null;
-            }
-            if (!sha1.equals(sha1(part))) {
-                LOGGER.error("Flashback download failed: checksum mismatch");
-                return null;
-            }
-            return Files.move(part, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
-        } catch (IOException | InterruptedException e) {
-            LOGGER.error("Flashback download failed", e);
-            return null;
-        } finally {
-            try {
-                Files.deleteIfExists(part);
-            } catch (IOException ignored) {
-            }
-        }
     }
 
     private static String sha1(Path file) throws IOException {

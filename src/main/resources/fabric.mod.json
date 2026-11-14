@@ -25,7 +25,6 @@
     "flashback_legacy:target": {
       "version": "${flashback_version}",
       "mc": "${flashback_mc}",
-      "url": "${flashback_url}",
       "sha1": "${flashback_sha1}"
     }
   }

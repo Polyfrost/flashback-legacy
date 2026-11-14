@@ -10,7 +10,7 @@ val modid = property("mod.id") as String
 val shimStubsJar = layout.buildDirectory.file("flashback/compile-stubs.jar")
 val flashbackCompileDir = layout.buildDirectory.dir("flashback/compile")
 val flashbackJar = layout.projectDirectory.file(
-    "run/flashback-legacy/Flashback-${property("flashback.version")}-for-MC${property("flashback.mc")}.jar"
+    "run/flashback/Flashback-${property("flashback.version")}-for-MC${property("flashback.mc")}.jar"
 )
 
 version = "${property("mod.version")}+${property("minecraft_version")}"
@@ -79,7 +79,6 @@ tasks.processResources {
         "loader_version" to project.property("loader_version"),
         "flashback_version" to project.property("flashback.version"),
         "flashback_mc" to project.property("flashback.mc"),
-        "flashback_url" to project.property("flashback.url"),
         "flashback_sha1" to project.property("flashback.sha1"),
     )
     inputs.properties(props)
