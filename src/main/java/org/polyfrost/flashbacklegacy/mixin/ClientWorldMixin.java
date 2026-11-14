@@ -2,7 +2,6 @@ package org.polyfrost.flashbacklegacy.mixin;
 
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -13,7 +12,7 @@ import org.polyfrost.flashbacklegacy.playback.LegacyReplayServer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientWorld.class)
@@ -23,8 +22,8 @@ public abstract class ClientWorldMixin {
         LegacyReplayServer.stabilizeUuid(entity, id);
     }
 
-    @Redirect(method = "doRandomDisplayTicks", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;randomDisplayTick(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/BlockState;Ljava/util/Random;)V"))
-    private void flashback$seededDisplayTick(Block block, World world, BlockPos pos, BlockState state, Random random) {
-        block.randomDisplayTick(world, pos, state, EditorUi.displayTickRandom(random, pos));
+    @ModifyArg(method = "doRandomDisplayTicks", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;randomDisplayTick(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/BlockState;Ljava/util/Random;)V"), index = 3)
+    private Random flashback$seededDisplayTick(World world, BlockPos pos, BlockState state, Random random) {
+        return EditorUi.displayTickRandom(random, pos);
     }
 }

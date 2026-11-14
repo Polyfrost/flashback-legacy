@@ -10,12 +10,13 @@ import net.minecraft.world.World;
 import org.polyfrost.flashbacklegacy.playback.LegacyReplayServer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
 @Mixin(TrackedEntity.class)
 public abstract class TrackedEntityMixin {
-    @Redirect(method = "*", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/FilledMapItem;getUpdatePacket(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Lnet/minecraft/entity/living/player/PlayerEntity;)Lnet/minecraft/network/packet/Packet;"))
-    private Packet<?> flashback$noBlankMaps(FilledMapItem item, ItemStack stack, World world, PlayerEntity player) {
-        return world instanceof ServerWorld server && server.getServer() instanceof LegacyReplayServer ? null : item.getUpdatePacket(stack, world, player);
+    @WrapOperation(method = "*", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/FilledMapItem;getUpdatePacket(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Lnet/minecraft/entity/living/player/PlayerEntity;)Lnet/minecraft/network/packet/Packet;"))
+    private Packet<?> flashback$noBlankMaps(FilledMapItem item, ItemStack stack, World world, PlayerEntity player, Operation<Packet<?>> original) {
+        return world instanceof ServerWorld server && server.getServer() instanceof LegacyReplayServer ? null : original.call(item, stack, world, player);
     }
 }

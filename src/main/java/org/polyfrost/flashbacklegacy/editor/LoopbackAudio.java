@@ -3,7 +3,6 @@ package org.polyfrost.flashbacklegacy.editor;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 import java.util.concurrent.locks.LockSupport;
 
 import net.minecraft.client.Minecraft;
@@ -21,13 +20,19 @@ public final class LoopbackAudio {
     private LoopbackAudio() {
     }
 
-    public static long openDevice(CharSequence name) {
-        if (channels == 0) return ALC10.alcOpenDevice(name);
+    public static boolean enabled() {
+        return channels != 0;
+    }
+
+    public static boolean isDevice(long dev) {
+        return channels != 0 && dev == device;
+    }
+
+    public static long openDevice() {
         return device = SOFTLoopback.alcLoopbackOpenDeviceSOFT((CharSequence) null);
     }
 
-    public static long createContext(long dev, IntBuffer attributes) {
-        if (channels == 0 || dev != device) return ALC10.alcCreateContext(dev, attributes);
+    public static long createContext(long dev) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             return ALC10.alcCreateContext(dev, stack.ints(
                 SOFTLoopback.ALC_FORMAT_TYPE_SOFT, SOFTLoopback.ALC_FLOAT_SOFT,

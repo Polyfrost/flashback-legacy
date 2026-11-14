@@ -9,16 +9,15 @@ import org.polyfrost.flashbacklegacy.editor.EditorUi;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(WorldRenderer.class)
 public abstract class WorldRendererMixin {
-    @Redirect(method = "renderEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/block/entity/BlockEntityRenderDispatcher;render(Lnet/minecraft/block/entity/BlockEntity;FI)V"))
-    private void flashback$blockEntity(BlockEntityRenderDispatcher dispatcher, BlockEntity blockEntity, float tickDelta, int miningProgress) {
+    @WrapWithCondition(method = "renderEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/block/entity/BlockEntityRenderDispatcher;render(Lnet/minecraft/block/entity/BlockEntity;FI)V"))
+    private boolean flashback$blockEntity(BlockEntityRenderDispatcher dispatcher, BlockEntity blockEntity, float tickDelta, int miningProgress) {
         ReplayVisuals visuals = EditorUi.visuals();
-        if (visuals != null && (!visuals.renderBlocks || !visuals.renderBeaconBeams && blockEntity instanceof BeaconBlockEntity)) return;
-        dispatcher.render(blockEntity, tickDelta, miningProgress);
+        return visuals == null || visuals.renderBlocks && (visuals.renderBeaconBeams || !(blockEntity instanceof BeaconBlockEntity));
     }
 
     @Inject(method = "isNear", at = @At("HEAD"), cancellable = true)

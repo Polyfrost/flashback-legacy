@@ -30,7 +30,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
@@ -69,9 +70,9 @@ public abstract class MinecraftMixin {
         ClientTickEvents.START_CLIENT_TICK.invoker().onStartTick(shim);
     }
 
-    @Redirect(method = "startGame", at = @At(value = "NEW", target = "net/minecraft/server/integrated/IntegratedServer"))
-    private IntegratedServer flashback$replayServer(Minecraft minecraft, String saveName, String worldName, WorldSettings settings) {
-        return LegacyReplayServer.pending != null ? new LegacyReplayServer(minecraft, saveName, worldName, settings) : new IntegratedServer(minecraft, saveName, worldName, settings);
+    @WrapOperation(method = "startGame", at = @At(value = "NEW", target = "net/minecraft/server/integrated/IntegratedServer"))
+    private IntegratedServer flashback$replayServer(Minecraft minecraft, String saveName, String worldName, WorldSettings settings, Operation<IntegratedServer> original) {
+        return LegacyReplayServer.pending != null ? new LegacyReplayServer(minecraft, saveName, worldName, settings) : original.call(minecraft, saveName, worldName, settings);
     }
 
     @Inject(method = "setWorld(Lnet/minecraft/client/world/ClientWorld;Ljava/lang/String;)V", at = @At("HEAD"))
@@ -204,9 +205,9 @@ public abstract class MinecraftMixin {
         return EditorUi.gameHeight(height);
     }
 
-    @Redirect(method = "runGame", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/pipeline/RenderTarget;draw(II)V"))
-    private void flashback$drawGame(RenderTarget target, int width, int height) {
-        EditorUi.drawGame(target, width, height);
+    @WrapOperation(method = "runGame", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/pipeline/RenderTarget;draw(II)V"))
+    private void flashback$drawGame(RenderTarget target, int width, int height, Operation<Void> original) {
+        EditorUi.drawGame(width, height, () -> original.call(target, width, height));
     }
 
     @Inject(method = "lockMouse", at = @At("HEAD"), cancellable = true)
@@ -214,10 +215,10 @@ public abstract class MinecraftMixin {
         if (EditorUi.blocksMouseLock()) ci.cancel();
     }
 
-    @Redirect(method = "runGame", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;render(FJ)V"))
-    private void flashback$render(GameRenderer renderer, float partialTick, long nanoTime) {
+    @WrapOperation(method = "runGame", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;render(FJ)V"))
+    private void flashback$render(GameRenderer renderer, float partialTick, long nanoTime, Operation<Void> original) {
         if (player == null || !flashback$overridingViewerTimer()) {
-            renderer.render(partialTick, nanoTime);
+            original.call(renderer, partialTick, nanoTime);
             return;
         }
         LocalClientPlayerEntity p = player;
@@ -227,7 +228,7 @@ public abstract class MinecraftMixin {
         p.y = p.lastY = p.prevY = saved[4] + (saved[1] - saved[4]) * t;
         p.z = p.lastZ = p.prevZ = saved[5] + (saved[2] - saved[5]) * t;
         try {
-            renderer.render(partialTick, nanoTime);
+            original.call(renderer, partialTick, nanoTime);
         } finally {
             p.x = saved[0];
             p.y = saved[1];

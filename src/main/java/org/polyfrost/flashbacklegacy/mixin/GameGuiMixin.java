@@ -1,7 +1,6 @@
 package org.polyfrost.flashbacklegacy.mixin;
 
 import com.moulberry.flashback.Flashback;
-import net.minecraft.client.ClientPlayerInteractionManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.living.player.ClientPlayerEntity;
 import net.minecraft.client.gui.GameGui;
@@ -21,7 +20,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GameGui.class)
@@ -51,22 +52,22 @@ public abstract class GameGuiMixin {
         return info == null ? null : info.getGameMode();
     }
 
-    @Redirect(method = {"render", "hasCrosshair"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/ClientPlayerInteractionManager;hidesGui()Z"))
-    private boolean flashback$cameraSpectator(ClientPlayerInteractionManager manager) {
+    @ModifyExpressionValue(method = {"render", "hasCrosshair"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/ClientPlayerInteractionManager;hidesGui()Z"))
+    private boolean flashback$cameraSpectator(boolean hidesGui) {
         WorldSettings.GameMode mode = flashback$cameraMode();
-        return mode != null ? mode == WorldSettings.GameMode.SPECTATOR : manager.hidesGui();
+        return mode != null ? mode == WorldSettings.GameMode.SPECTATOR : hidesGui;
     }
 
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/ClientPlayerInteractionManager;hasStatusBars()Z"))
-    private boolean flashback$cameraStatusBars(ClientPlayerInteractionManager manager) {
+    @ModifyExpressionValue(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/ClientPlayerInteractionManager;hasStatusBars()Z"))
+    private boolean flashback$cameraStatusBars(boolean hasStatusBars) {
         WorldSettings.GameMode mode = flashback$cameraMode();
-        return mode != null ? mode.isSurvival() : manager.hasStatusBars();
+        return mode != null ? mode.isSurvival() : hasStatusBars;
     }
 
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/ClientPlayerInteractionManager;hasXpBar()Z"))
-    private boolean flashback$cameraXpBar(ClientPlayerInteractionManager manager) {
+    @ModifyExpressionValue(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/ClientPlayerInteractionManager;hasXpBar()Z"))
+    private boolean flashback$cameraXpBar(boolean hasXpBar) {
         WorldSettings.GameMode mode = flashback$cameraMode();
-        return mode != null ? mode.isSurvival() : manager.hasXpBar();
+        return mode != null ? mode.isSurvival() : hasXpBar;
     }
 
     @Inject(method = {"renderHotbar", "renderStatusBars", "renderJumpBar", "renderXpBar", "renderSelectedItemName"}, at = @At("HEAD"), cancellable = true)
@@ -74,29 +75,29 @@ public abstract class GameGuiMixin {
         if (EditorUi.hidesHud(v -> v.showHotbar)) ci.cancel();
     }
 
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/spectator/SpectatorGui;renderHotbar(Lnet/minecraft/client/render/Window;F)V"))
-    private void flashback$hideSpectatorHotbar(SpectatorGui gui, Window window, float tickDelta) {
-        if (!EditorUi.hidesHud(v -> v.showHotbar)) gui.renderHotbar(window, tickDelta);
+    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/spectator/SpectatorGui;renderHotbar(Lnet/minecraft/client/render/Window;F)V"))
+    private boolean flashback$hideSpectatorHotbar(SpectatorGui gui, Window window, float tickDelta) {
+        return !EditorUi.hidesHud(v -> v.showHotbar);
     }
 
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/spectator/SpectatorGui;renderTooltip(Lnet/minecraft/client/render/Window;)V"))
-    private void flashback$hideSpectatorTooltip(SpectatorGui gui, Window window) {
-        if (!EditorUi.hidesHud(v -> v.showHotbar)) gui.renderTooltip(window);
+    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/spectator/SpectatorGui;renderTooltip(Lnet/minecraft/client/render/Window;)V"))
+    private boolean flashback$hideSpectatorTooltip(SpectatorGui gui, Window window) {
+        return !EditorUi.hidesHud(v -> v.showHotbar);
     }
 
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/chat/ChatGui;render(I)V"))
-    private void flashback$hideChat(ChatGui chat, int ticks) {
-        if (!EditorUi.hidesHud(v -> v.showChat)) chat.render(ticks);
+    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/chat/ChatGui;render(I)V"))
+    private boolean flashback$hideChat(ChatGui chat, int ticks) {
+        return !EditorUi.hidesHud(v -> v.showChat);
     }
 
-    @Redirect(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/GameGui;overlayMessageCooldown:I"))
-    private int flashback$hideActionBar(GameGui gui) {
-        return EditorUi.hidesHud(v -> v.showActionBar) ? 0 : overlayMessageCooldown;
+    @ModifyExpressionValue(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/GameGui;overlayMessageCooldown:I", opcode = Opcodes.GETFIELD))
+    private int flashback$hideActionBar(int cooldown) {
+        return EditorUi.hidesHud(v -> v.showActionBar) ? 0 : cooldown;
     }
 
-    @Redirect(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/GameGui;titleTime:I"))
-    private int flashback$hideTitle(GameGui gui) {
-        return EditorUi.hidesHud(v -> v.showTitleText) ? 0 : titleTime;
+    @ModifyExpressionValue(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/GameGui;titleTime:I", opcode = Opcodes.GETFIELD))
+    private int flashback$hideTitle(int time) {
+        return EditorUi.hidesHud(v -> v.showTitleText) ? 0 : time;
     }
 
     @Inject(method = "renderScoreboardObjective", at = @At("HEAD"), cancellable = true)

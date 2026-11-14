@@ -16,12 +16,10 @@ import net.minecraft.client.render.vertex.Tesselator;
 import net.minecraft.client.render.world.WorldRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.living.LivingEntity;
-import net.minecraft.entity.living.effect.StatusEffect;
 import org.polyfrost.flashbacklegacy.editor.EditorUi;
 import com.moulberry.flashback.state.EditorState;
 import com.moulberry.flashback.state.EditorStateManager;
 import com.moulberry.flashback.visuals.CameraRotation;
-import net.minecraft.client.ClientPlayerInteractionManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.living.player.ClientPlayerEntity;
 import net.minecraft.client.render.GameRenderer;
@@ -39,7 +37,11 @@ import com.moulberry.flashback.editor.ui.ReplayUI;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -101,40 +103,40 @@ public abstract class GameRendererMixin {
         flashback$viewModifier = null;
     }
 
-    @Redirect(method = "renderItemInHand", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/ClientPlayerInteractionManager;hidesGui()Z"))
-    private boolean flashback$spectatedHands(ClientPlayerInteractionManager interactionManager) {
+    @ModifyExpressionValue(method = "renderItemInHand", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/ClientPlayerInteractionManager;hidesGui()Z"))
+    private boolean flashback$spectatedHands(boolean hidesGui) {
         ClientPlayerEntity spectated = LegacyReplayServer.spectatedPlayer();
-        return spectated != null ? spectated.isSpectator() : interactionManager.hidesGui();
+        return spectated != null ? spectated.isSpectator() : hidesGui;
     }
 
-    @Redirect(method = "render(IFJ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/world/WorldRenderer;renderSky(FI)V"))
-    private void flashback$sky(WorldRenderer worldRenderer, float tickDelta, int anaglyphPass) {
+    @WrapWithCondition(method = "render(IFJ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/world/WorldRenderer;renderSky(FI)V"))
+    private boolean flashback$sky(WorldRenderer worldRenderer, float tickDelta, int anaglyphPass) {
         ReplayVisuals visuals = EditorUi.visuals();
-        if (visuals == null || visuals.renderSky) worldRenderer.renderSky(tickDelta, anaglyphPass);
+        return visuals == null || visuals.renderSky;
     }
 
-    @Redirect(method = "render(IFJ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/world/WorldRenderer;render(Lnet/minecraft/client/render/block/BlockLayer;DILnet/minecraft/entity/Entity;)I"))
-    private int flashback$terrain(WorldRenderer worldRenderer, BlockLayer layer, double tickDelta, int anaglyphPass, Entity camera) {
+    @WrapOperation(method = "render(IFJ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/world/WorldRenderer;render(Lnet/minecraft/client/render/block/BlockLayer;DILnet/minecraft/entity/Entity;)I"))
+    private int flashback$terrain(WorldRenderer worldRenderer, BlockLayer layer, double tickDelta, int anaglyphPass, Entity camera, Operation<Integer> original) {
         ReplayVisuals visuals = EditorUi.visuals();
-        return visuals == null || visuals.renderBlocks ? worldRenderer.render(layer, tickDelta, anaglyphPass, camera) : 0;
+        return visuals == null || visuals.renderBlocks ? original.call(worldRenderer, layer, tickDelta, anaglyphPass, camera) : 0;
     }
 
-    @Redirect(method = "render(IFJ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/world/WorldRenderer;renderMiningProgress(Lnet/minecraft/client/render/vertex/Tesselator;Lnet/minecraft/client/render/vertex/BufferBuilder;Lnet/minecraft/entity/Entity;F)V"))
-    private void flashback$miningProgress(WorldRenderer worldRenderer, Tesselator tesselator, BufferBuilder builder, Entity camera, float tickDelta) {
+    @WrapWithCondition(method = "render(IFJ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/world/WorldRenderer;renderMiningProgress(Lnet/minecraft/client/render/vertex/Tesselator;Lnet/minecraft/client/render/vertex/BufferBuilder;Lnet/minecraft/entity/Entity;F)V"))
+    private boolean flashback$miningProgress(WorldRenderer worldRenderer, Tesselator tesselator, BufferBuilder builder, Entity camera, float tickDelta) {
         ReplayVisuals visuals = EditorUi.visuals();
-        if (visuals == null || visuals.renderBlocks) worldRenderer.renderMiningProgress(tesselator, builder, camera, tickDelta);
+        return visuals == null || visuals.renderBlocks;
     }
 
-    @Redirect(method = "render(IFJ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/ParticleManager;render(Lnet/minecraft/entity/Entity;F)V"))
-    private void flashback$particles(ParticleManager particles, Entity camera, float tickDelta) {
+    @WrapWithCondition(method = "render(IFJ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/ParticleManager;render(Lnet/minecraft/entity/Entity;F)V"))
+    private boolean flashback$particles(ParticleManager particles, Entity camera, float tickDelta) {
         ReplayVisuals visuals = EditorUi.visuals();
-        if (visuals == null || visuals.renderParticles) particles.render(camera, tickDelta);
+        return visuals == null || visuals.renderParticles;
     }
 
-    @Redirect(method = "render(IFJ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/ParticleManager;renderLit(Lnet/minecraft/entity/Entity;F)V"))
-    private void flashback$litParticles(ParticleManager particles, Entity camera, float tickDelta) {
+    @WrapWithCondition(method = "render(IFJ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/ParticleManager;renderLit(Lnet/minecraft/entity/Entity;F)V"))
+    private boolean flashback$litParticles(ParticleManager particles, Entity camera, float tickDelta) {
         ReplayVisuals visuals = EditorUi.visuals();
-        if (visuals == null || visuals.renderParticles) particles.renderLit(camera, tickDelta);
+        return visuals == null || visuals.renderParticles;
     }
 
     @Inject(method = "render(IFJ)V", at = @At(value = "INVOKE_STRING", target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", args = "ldc=hand"))
@@ -167,10 +169,10 @@ public abstract class GameRendererMixin {
         GlStateManager.fogEnd(visuals.overrideFogEnd);
     }
 
-    @Redirect(method = "updateLightMap", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/living/player/LocalClientPlayerEntity;hasStatusEffect(Lnet/minecraft/entity/living/effect/StatusEffect;)Z"))
-    private boolean flashback$nightVision(LocalClientPlayerEntity player, StatusEffect effect) {
+    @ModifyExpressionValue(method = "updateLightMap", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/living/player/LocalClientPlayerEntity;hasStatusEffect(Lnet/minecraft/entity/living/effect/StatusEffect;)Z"))
+    private boolean flashback$nightVision(boolean hasEffect) {
         ReplayVisuals visuals = EditorUi.visuals();
-        return visuals != null && visuals.overrideNightVision || player.hasStatusEffect(effect);
+        return visuals != null && visuals.overrideNightVision || hasEffect;
     }
 
     @Inject(method = "getNightVisionScale", at = @At("HEAD"), cancellable = true)
@@ -187,23 +189,24 @@ public abstract class GameRendererMixin {
         AccurateEntityPositionHandler.apply(shim.get$level(), runsNormally -> tickDelta);
     }
 
-    @Redirect(method = "render(FJ)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/options/GameOptions;mouseSensitivity:F"))
-    private float flashback$sensitivity(GameOptions options) {
+    @ModifyExpressionValue(method = "render(FJ)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/options/GameOptions;mouseSensitivity:F", opcode = Opcodes.GETFIELD))
+    private float flashback$sensitivity(float sensitivity) {
         ReplayVisuals visuals = EditorUi.visuals();
-        if (visuals == null || !visuals.overrideFov) return options.mouseSensitivity;
+        if (visuals == null || !visuals.overrideFov) return sensitivity;
         float fov = visuals.overrideFovAmount;
-        if (fov > 20 || fov >= options.fov) return options.mouseSensitivity;
-        return options.mouseSensitivity * Utils.fovToFocalLength(options.fov) / Utils.fovToFocalLength(fov);
+        GameOptions options = minecraft.options;
+        if (fov > 20 || fov >= options.fov) return sensitivity;
+        return sensitivity * Utils.fovToFocalLength(options.fov) / Utils.fovToFocalLength(fov);
     }
 
-    @Redirect(method = "render(FJ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/living/player/LocalClientPlayerEntity;updateLocalPlayerCamera(FF)V"))
-    private void flashback$lockFlightRotation(LocalClientPlayerEntity player, float yaw, float pitch) {
+    @WrapOperation(method = "render(FJ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/living/player/LocalClientPlayerEntity;updateLocalPlayerCamera(FF)V"))
+    private void flashback$lockFlightRotation(LocalClientPlayerEntity player, float yaw, float pitch, Operation<Void> original) {
         if (EditorUi.exportSettings() != null) return;
         if (FlashbackLegacy.flashbackLoaded && Flashback.isInReplay()) {
             FlashbackConfigV1 config = Flashback.getConfig();
             if (config.editorMovement.flightLockYaw) yaw = 0;
             if (config.editorMovement.flightLockPitch) pitch = 0;
         }
-        player.updateLocalPlayerCamera(yaw, pitch);
+        original.call(player, yaw, pitch);
     }
 }

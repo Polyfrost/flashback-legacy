@@ -7,13 +7,14 @@ import net.minecraft.world.World;
 import org.polyfrost.flashbacklegacy.record.LegacyPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
 @Mixin(ClientPlayerInteractionManager.class)
 public abstract class ClientPlayerInteractionManagerMixin {
-    @Redirect(method = "finishMiningBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;doEvent(ILnet/minecraft/util/math/BlockPos;I)V"))
-    private void flashback$recordBreak(World world, int type, BlockPos pos, int data) {
+    @WrapOperation(method = "finishMiningBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;doEvent(ILnet/minecraft/util/math/BlockPos;I)V"))
+    private void flashback$recordBreak(World world, int type, BlockPos pos, int data, Operation<Void> original) {
         LegacyPacket.record(new WorldEventS2CPacket(type, pos, data, false));
-        world.doEvent(type, pos, data);
+        original.call(world, type, pos, data);
     }
 }

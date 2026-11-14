@@ -22,7 +22,6 @@ import net.minecraft.world.HitResult;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.phys.EntityHitResult;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.phys.Vec3;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.pipeline.RenderTarget;
 import net.minecraft.client.render.platform.GlStateManager;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -66,8 +65,7 @@ public final class EditorUi {
         return started && !failed && ReplayUI.isActive() && !ReplayUI.isMovingCamera();
     }
 
-    public static int eventType(SDL_Event event) {
-        int type = event.type();
+    public static int eventType(SDL_Event event, int type) {
         if (!started || failed) return type;
         try {
             boolean passKey = type == SDL_EVENT_KEY_UP || type == SDL_EVENT_KEY_DOWN && Flashback.isExporting();
@@ -112,9 +110,9 @@ public final class EditorUi {
         return job != null && job.isRunning() ? job.getSettings() : null;
     }
 
-    public static long renderClock() {
+    public static long renderClock(long time) {
         ExportSettings settings = exportSettings();
-        return settings == null ? Minecraft.getTime() : (long) ((settings.startTick() + Flashback.EXPORT_JOB.getCurrentTickDouble()) * 50);
+        return settings == null ? time : (long) ((settings.startTick() + Flashback.EXPORT_JOB.getCurrentTickDouble()) * 50);
     }
 
     public static boolean panoramicExport() {
@@ -122,9 +120,9 @@ public final class EditorUi {
         return settings != null && (settings.projection() == ExportProjection.CUBE_MAP || settings.projection() == ExportProjection.EQUIRECTANGULAR);
     }
 
-    public static Random entityRandom(Entity entity) {
+    public static Random entityRandom(Entity entity, Random original) {
         ExportSettings settings = exportSettings();
-        if (settings == null || !settings.resetRng() || !Minecraft.getInstance().isOnSameThread()) return new Random();
+        if (settings == null || !settings.resetRng() || !Minecraft.getInstance().isOnSameThread()) return original;
         Random particles = Flashback.EXPORT_JOB.getParticleRandom();
         if (entity instanceof Particle && particles != null) return new Random(particles.nextLong());
         return new Random(Flashback.EXPORT_JOB.getInitialEntitySeedForCurrentClientTick());
@@ -154,9 +152,9 @@ public final class EditorUi {
         return modifiesViewport() ? Minecraft.getInstance().height : displayHeight;
     }
 
-    public static void drawGame(RenderTarget target, int width, int height) {
+    public static void drawGame(int width, int height, Runnable draw) {
         if (!modifiesViewport()) {
-            target.draw(width, height);
+            draw.run();
             return;
         }
         int displayWidth = Display.getWidth(), displayHeight = Display.getHeight();
@@ -167,7 +165,7 @@ public final class EditorUi {
         GlStateManager.clear(GL11.GL_COLOR_BUFFER_BIT);
         frameViewport = new int[]{Math.round(ReplayUI.frameX * sx), displayHeight - Math.round(ReplayUI.frameY * sy) - height, width, height};
         try {
-            target.draw(width, height);
+            draw.run();
         } finally {
             frameViewport = null;
         }
