@@ -1,19 +1,22 @@
 package org.polyfrost.flashbacklegacy.shim.net.minecraft.world.entity;
 
-import org.polyfrost.flashbacklegacy.shim.net.minecraft.commands.arguments.EntityAnchorArgument;
-import org.polyfrost.flashbacklegacy.shim.net.minecraft.util.Mth;
-import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.level.entity.EntityAccess;
-import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.phys.Vec3;
-import java.util.Map;
-import java.util.UUID;
-
 import com.google.common.collect.MapMaker;
+import net.minecraft.client.entity.living.player.ClientPlayerEntity;
 import net.minecraft.client.entity.living.player.LocalClientPlayerEntity;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.living.player.PlayerEntity;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.multiplayer.ClientLevel;
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.player.AbstractClientPlayer;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.player.LocalPlayer;
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.commands.arguments.EntityAnchorArgument;
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.util.Mth;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.entity.player.Player;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.level.Level;
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.level.entity.EntityAccess;
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.phys.Vec3;
+
+import java.util.Map;
+import java.util.UUID;
 
 public class Entity implements EntityAccess {
     private static final Map<net.minecraft.entity.Entity, Entity> WRAPPERS = new MapMaker().weakKeys().makeMap();
@@ -28,7 +31,7 @@ public class Entity implements EntityAccess {
         if (handle == null) return null;
         return WRAPPERS.computeIfAbsent(handle, h -> switch (h) {
             case LocalClientPlayerEntity p -> new LocalPlayer(p);
-            case net.minecraft.client.entity.living.player.ClientPlayerEntity p -> new org.polyfrost.flashbacklegacy.shim.net.minecraft.client.player.AbstractClientPlayer(p);
+            case ClientPlayerEntity p -> new AbstractClientPlayer(p);
             case PlayerEntity p -> new Player(p);
             case net.minecraft.entity.living.LivingEntity l -> new LivingEntity(l);
             default -> new Entity(h);
@@ -148,7 +151,7 @@ public class Entity implements EntityAccess {
     }
 
     public Level level() {
-        return ClientLevel.of((net.minecraft.client.world.ClientWorld) handle.world);
+        return ClientLevel.of((ClientWorld) handle.world);
     }
 
     private boolean noGravity;

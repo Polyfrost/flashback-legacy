@@ -1,8 +1,8 @@
 package org.polyfrost.flashbacklegacy.shim.net.minecraft.client;
 
-import java.util.Arrays;
-
 import net.minecraft.client.options.GameOptions;
+
+import java.util.Arrays;
 
 public class Options {
     private static Options instance;

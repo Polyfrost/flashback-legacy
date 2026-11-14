@@ -1,14 +1,14 @@
 package org.polyfrost.flashbacklegacy.compat;
 
-import java.time.Duration;
-import java.util.NavigableMap;
-import java.util.concurrent.TimeUnit;
-
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.BoundType;
 import com.google.common.collect.Range;
 import com.google.gson.JsonObject;
 import io.netty.buffer.ByteBuf;
+
+import java.time.Duration;
+import java.util.NavigableMap;
+import java.util.concurrent.TimeUnit;
 
 public final class LibraryCompat {
     private LibraryCompat() {

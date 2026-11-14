@@ -1,12 +1,12 @@
 package org.polyfrost.flashbacklegacy.shim.com.mojang.blaze3d.platform;
 
+import javax.imageio.ImageIO;
+
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-
-import javax.imageio.ImageIO;
 
 public class NativeImage implements AutoCloseable {
     private final int width;

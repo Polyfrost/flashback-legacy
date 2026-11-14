@@ -1,5 +1,7 @@
 package org.polyfrost.flashbacklegacy.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.moulberry.flashback.combo_options.WeatherOverride;
 import com.moulberry.flashback.visuals.ReplayVisuals;
 import net.minecraft.client.Minecraft;
@@ -14,13 +16,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.polyfrost.flashbacklegacy.editor.EditorUi;
 import org.polyfrost.flashbacklegacy.playback.LegacyReplayServer;
-import org.polyfrost.flashbacklegacy.playback.ReplayFakePlayer;
 import org.polyfrost.flashbacklegacy.record.LegacyPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 

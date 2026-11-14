@@ -1,18 +1,18 @@
 package org.polyfrost.flashbacklegacy.mixin.flashback;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
-
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.moulberry.flashback.utils.AsyncFileDialogs;
 import org.lwjgl.sdl.SDL_DialogFileCallbackI;
 import org.lwjgl.sdl.SDL_DialogFileFilter;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import pl.tomgirl.pylon.window.MainThread;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 @Mixin(value = AsyncFileDialogs.class, remap = false)
 public class AsyncFileDialogsMixin {

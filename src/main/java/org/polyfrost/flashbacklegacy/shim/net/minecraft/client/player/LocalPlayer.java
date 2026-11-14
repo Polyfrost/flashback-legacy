@@ -1,6 +1,7 @@
 package org.polyfrost.flashbacklegacy.shim.net.minecraft.client.player;
 
 import net.minecraft.client.entity.living.player.LocalClientPlayerEntity;
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.multiplayer.ClientPacketListener;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.core.RegistryAccess;
 
 public class LocalPlayer extends AbstractClientPlayer {
@@ -8,8 +9,8 @@ public class LocalPlayer extends AbstractClientPlayer {
         super(handle);
     }
 
-    public org.polyfrost.flashbacklegacy.shim.net.minecraft.client.multiplayer.ClientPacketListener get$connection() {
-        return new org.polyfrost.flashbacklegacy.shim.net.minecraft.client.multiplayer.ClientPacketListener(((LocalClientPlayerEntity) handle).networkHandler);
+    public ClientPacketListener get$connection() {
+        return new ClientPacketListener(((LocalClientPlayerEntity) handle).networkHandler);
     }
 
     public RegistryAccess registryAccess() {

@@ -1,10 +1,5 @@
 package com.moulberry.flashback.playback;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import com.google.gson.JsonObject;
 import com.moulberry.flashback.Flashback;
 import com.moulberry.flashback.record.FlashbackMeta;
@@ -13,6 +8,11 @@ import com.moulberry.flashback.state.EditorStateManager;
 import net.minecraft.network.PacketByteBuf;
 import org.polyfrost.flashbacklegacy.playback.LegacyReplayServer;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.server.IntegratedServer;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ReplayServer extends IntegratedServer {
     public volatile int jumpToTick = -1;

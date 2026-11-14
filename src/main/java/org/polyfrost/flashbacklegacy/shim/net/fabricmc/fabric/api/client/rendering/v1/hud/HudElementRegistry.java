@@ -1,9 +1,9 @@
 package org.polyfrost.flashbacklegacy.shim.net.fabricmc.fabric.api.client.rendering.v1.hud;
 
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.resources.Identifier;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import org.polyfrost.flashbacklegacy.shim.net.minecraft.resources.Identifier;
 
 public interface HudElementRegistry {
     Map<Identifier, HudElement> ELEMENTS = new LinkedHashMap<>();

@@ -1,13 +1,5 @@
 package org.polyfrost.flashbacklegacy.shim.net.minecraft.core.registries;
 
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Stream;
-
 import com.mojang.serialization.DynamicOps;
 import net.minecraft.entity.Entities;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.core.DefaultedRegistry;
@@ -16,6 +8,14 @@ import org.polyfrost.flashbacklegacy.shim.net.minecraft.core.particles.ParticleT
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.resources.Identifier;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.resources.ResourceKey;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.entity.EntityType;
+
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
 
 public class BuiltInRegistries {
     private static final Registry<Registry<?>> REGISTRY = new MapRegistry<>(Map.of());

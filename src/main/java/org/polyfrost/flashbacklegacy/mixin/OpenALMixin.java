@@ -1,13 +1,13 @@
 package org.polyfrost.flashbacklegacy.mixin;
 
-import java.nio.IntBuffer;
-
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import org.lwjgl.openal.AL;
 import org.polyfrost.flashbacklegacy.editor.LoopbackAudio;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+
+import java.nio.IntBuffer;
 
 @Mixin(value = AL.class, remap = false)
 public abstract class OpenALMixin {

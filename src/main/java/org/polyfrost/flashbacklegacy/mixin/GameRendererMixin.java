@@ -1,14 +1,25 @@
 package org.polyfrost.flashbacklegacy.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.moulberry.flashback.Flashback;
 import com.moulberry.flashback.Utils;
 import com.moulberry.flashback.configuration.FlashbackConfigV1;
-import com.moulberry.flashback.visuals.AccurateEntityPositionHandler;
+import com.moulberry.flashback.editor.ui.ReplayUI;
 import com.moulberry.flashback.exporting.ExportSettings;
+import com.moulberry.flashback.state.EditorState;
+import com.moulberry.flashback.state.EditorStateManager;
+import com.moulberry.flashback.visuals.AccurateEntityPositionHandler;
+import com.moulberry.flashback.visuals.CameraRotation;
 import com.moulberry.flashback.visuals.ReplayVisuals;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.ParticleManager;
+import net.minecraft.client.entity.living.player.ClientPlayerEntity;
 import net.minecraft.client.entity.living.player.LocalClientPlayerEntity;
 import net.minecraft.client.options.GameOptions;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.block.BlockLayer;
 import net.minecraft.client.render.platform.GlStateManager;
 import net.minecraft.client.render.vertex.BufferBuilder;
@@ -16,34 +27,25 @@ import net.minecraft.client.render.vertex.Tesselator;
 import net.minecraft.client.render.world.WorldRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.living.LivingEntity;
-import org.polyfrost.flashbacklegacy.editor.EditorUi;
-import com.moulberry.flashback.state.EditorState;
-import com.moulberry.flashback.state.EditorStateManager;
-import com.moulberry.flashback.visuals.CameraRotation;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.living.player.ClientPlayerEntity;
-import net.minecraft.client.render.GameRenderer;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
+import org.objectweb.asm.Opcodes;
 import org.polyfrost.flashbacklegacy.FlashbackLegacy;
+import org.polyfrost.flashbacklegacy.editor.EditorUi;
 import org.polyfrost.flashbacklegacy.playback.LegacyReplayServer;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import com.moulberry.flashback.editor.ui.ReplayUI;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.nio.FloatBuffer;
 
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin {
@@ -92,7 +94,7 @@ public abstract class GameRendererMixin {
         Entity camera = minecraft.getCamera();
         if (!FlashbackLegacy.flashbackLoaded || camera == null || !Flashback.isInReplay()) return;
         try (MemoryStack stack = MemoryStack.stackPush()) {
-            java.nio.FloatBuffer projection = stack.mallocFloat(16);
+            FloatBuffer projection = stack.mallocFloat(16);
             GL11.glGetFloatv(GL11.GL_PROJECTION_MATRIX, projection);
             ReplayUI.lastProjectionMatrix = new Matrix4f(projection);
         }

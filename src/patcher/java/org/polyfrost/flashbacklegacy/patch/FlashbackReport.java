@@ -1,5 +1,21 @@
 package org.polyfrost.flashbacklegacy.patch;
 
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.Handle;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.FieldNode;
+import org.objectweb.asm.tree.InvokeDynamicInsnNode;
+import org.objectweb.asm.tree.LdcInsnNode;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.MultiANewArrayInsnNode;
+import org.objectweb.asm.tree.TryCatchBlockNode;
+import org.objectweb.asm.tree.TypeInsnNode;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
@@ -20,21 +36,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.Handle;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldInsnNode;
-import org.objectweb.asm.tree.FieldNode;
-import org.objectweb.asm.tree.InvokeDynamicInsnNode;
-import org.objectweb.asm.tree.LdcInsnNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.MultiANewArrayInsnNode;
-import org.objectweb.asm.tree.TryCatchBlockNode;
-import org.objectweb.asm.tree.TypeInsnNode;
 
 public final class FlashbackReport {
     private record Info(String superName, List<String> interfaces, Set<String> members) {
@@ -192,7 +193,7 @@ public final class FlashbackReport {
                 switch (insn) {
                     case FieldInsnNode f -> reach(f.owner, f.name, f.desc, false, work, unresolved);
                     case MethodInsnNode m -> reach(m.owner, m.name, m.desc, true, work, unresolved);
-                    case TypeInsnNode t when t.getOpcode() == org.objectweb.asm.Opcodes.NEW -> work.add(t.desc + ".<clinit>()V");
+                    case TypeInsnNode t when t.getOpcode() == Opcodes.NEW -> work.add(t.desc + ".<clinit>()V");
                     case InvokeDynamicInsnNode indy -> {
                         for (Object arg : indy.bsmArgs) {
                             if (arg instanceof Handle h) reach(h.getOwner(), h.getName(), h.getDesc(), h.getDesc().startsWith("("), work, unresolved);

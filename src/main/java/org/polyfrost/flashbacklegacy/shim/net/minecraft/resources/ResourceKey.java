@@ -1,9 +1,9 @@
 package org.polyfrost.flashbacklegacy.shim.net.minecraft.resources;
 
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.core.Registry;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.polyfrost.flashbacklegacy.shim.net.minecraft.core.Registry;
 
 public final class ResourceKey<T> {
     private static final Map<String, ResourceKey<?>> VALUES = new ConcurrentHashMap<>();

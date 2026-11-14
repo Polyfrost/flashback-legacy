@@ -1,11 +1,5 @@
 package org.polyfrost.flashbacklegacy.screen;
 
-import java.io.IOException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 import com.moulberry.flashback.FlashbackGson;
 import com.moulberry.flashback.record.FlashbackMeta;
 import net.minecraft.client.gui.screen.Screen;
@@ -16,6 +10,12 @@ import org.lwjgl.input.Keyboard;
 import org.polyfrost.flashbacklegacy.FlashbackLegacy;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.gui.screens.AlertScreen;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.network.chat.Component;
+
+import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class LegacyEditReplayScreen extends Screen {
     private static final int BACK = 0, SAVE = 1, COMBINE = 2;

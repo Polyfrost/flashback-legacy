@@ -1,8 +1,5 @@
 package org.polyfrost.flashbacklegacy.playback;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.moulberry.flashback.state.EditorState;
 import com.moulberry.flashback.state.EditorStateManager;
 import net.minecraft.entity.Entity;
@@ -12,6 +9,9 @@ import net.minecraft.server.command.exception.IncorrectUsageException;
 import net.minecraft.server.command.source.CommandSource;
 import net.minecraft.text.TranslatableText;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.Minecraft;
+
+import java.util.List;
+import java.util.UUID;
 
 final class HideCommand extends AbstractCommand {
     private final boolean hide;

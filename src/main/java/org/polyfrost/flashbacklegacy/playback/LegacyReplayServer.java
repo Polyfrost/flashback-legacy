@@ -1,11 +1,21 @@
 package org.polyfrost.flashbacklegacy.playback;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import com.moulberry.flashback.Flashback;
+import com.moulberry.flashback.keyframe.handler.ReplayServerKeyframeHandler;
+import com.moulberry.flashback.packet.FlashbackAccurateEntityPosition;
+import com.moulberry.flashback.playback.ReplayServer;
+import com.moulberry.flashback.visuals.AccurateEntityPositionHandler;
+import io.netty.buffer.Unpooled;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.living.player.ClientPlayerEntity;
 import net.minecraft.entity.Entities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.living.player.PlayerEntity;
@@ -17,24 +27,20 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.PacketFlow;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.*;
-import net.minecraft.server.entity.living.player.ServerPlayerEntity;
 import net.minecraft.server.command.handler.CommandRegistry;
+import net.minecraft.server.entity.living.player.ServerPlayerEntity;
 import net.minecraft.server.integrated.IntegratedPlayerManager;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.chunk.WorldChunk;
 import net.minecraft.world.chunk.WorldChunkSection;
 import net.minecraft.world.gen.WorldGeneratorType;
 import org.apache.commons.io.FileUtils;
-import com.moulberry.flashback.Flashback;
-import com.moulberry.flashback.packet.FlashbackAccurateEntityPosition;
-import com.moulberry.flashback.visuals.AccurateEntityPositionHandler;
-import com.moulberry.flashback.keyframe.handler.ReplayServerKeyframeHandler;
-import com.moulberry.flashback.playback.ReplayServer;
 import org.polyfrost.flashbacklegacy.FlashbackLegacy;
 import org.polyfrost.flashbacklegacy.mixin.EntityAccessor;
 import org.polyfrost.flashbacklegacy.mixin.ServerPlayerEntityAccessor;
@@ -48,6 +54,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.locks.LockSupport;
 
 public class LegacyReplayServer extends IntegratedServer {
     public static final String SAVE_NAME = "flashback-replay";
@@ -70,7 +77,7 @@ public class LegacyReplayServer extends IntegratedServer {
     private final Map<Path, Integer> chunkSources = new HashMap<>();
     private static volatile int source;
     public final int totalTicks;
-    public final com.moulberry.flashback.playback.ReplayServer bridge;
+    public final ReplayServer bridge;
     private int chunkStart;
     private int timePacketTick;
     private long packetTime, packetTimeOfDay;
@@ -101,7 +108,7 @@ public class LegacyReplayServer extends IntegratedServer {
     public static final int SYNC_ID = 0x46425343;
     public static volatile boolean clientSynced, serverSynced;
 
-    public static void tickViewer(net.minecraft.world.World world, Entity viewer) {
+    public static void tickViewer(World world, Entity viewer) {
         tickingViewer = true;
         try {
             world.tickEntity(viewer);
@@ -114,12 +121,12 @@ public class LegacyReplayServer extends IntegratedServer {
         return separateViewerTicks && !tickingViewer && entity == Minecraft.getInstance().player;
     }
 
-    public static net.minecraft.client.entity.living.player.ClientPlayerEntity spectatedPlayer() {
+    public static ClientPlayerEntity spectatedPlayer() {
         Minecraft mc = Minecraft.getInstance();
-        return mc.getServer() instanceof LegacyReplayServer && mc.getCamera() instanceof net.minecraft.client.entity.living.player.ClientPlayerEntity p && p != mc.player ? p : null;
+        return mc.getServer() instanceof LegacyReplayServer && mc.getCamera() instanceof ClientPlayerEntity p && p != mc.player ? p : null;
     }
 
-    public static boolean spectate(java.util.UUID uuid) {
+    public static boolean spectate(UUID uuid) {
         if (!(Minecraft.getInstance().getServer() instanceof LegacyReplayServer server)) return false;
         server.executeTask(() -> {
             for (ServerPlayerEntity viewer : server.getPlayerManager().getAll()) {
@@ -169,7 +176,7 @@ public class LegacyReplayServer extends IntegratedServer {
             IntegratedServer old = minecraft.getServer();
             minecraft.world.disconnect();
             minecraft.setWorld(null);
-            while (old != null && !old.hasStopped()) java.util.concurrent.locks.LockSupport.parkNanos(10_000_000);
+            while (old != null && !old.hasStopped()) LockSupport.parkNanos(10_000_000);
         }
         FileUtils.deleteQuietly(new File(minecraft.gameDir, "saves/" + SAVE_NAME));
         pending = path;
@@ -190,7 +197,7 @@ public class LegacyReplayServer extends IntegratedServer {
             fileSystem = FileSystems.newFileSystem(path);
             JsonObject metadata = JsonParser.parseString(Files.readString(fileSystem.getPath("/metadata.json"))).getAsJsonObject();
             int ticks = 0, recording = 0;
-            for (Map.Entry<String, com.google.gson.JsonElement> entry : metadata.getAsJsonObject("chunks").entrySet()) {
+            for (Map.Entry<String, JsonElement> entry : metadata.getAsJsonObject("chunks").entrySet()) {
                 JsonObject meta = entry.getValue().getAsJsonObject();
                 Path file = fileSystem.getPath("/" + entry.getKey());
                 chunkFiles.put(ticks, file);
@@ -591,7 +598,7 @@ public class LegacyReplayServer extends IntegratedServer {
 
     private void unlistPlayers() throws IOException {
         if (listed.isEmpty()) return;
-        PacketByteBuf buf = new PacketByteBuf(io.netty.buffer.Unpooled.buffer());
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeVarInt(PlayerInfoS2CPacket.Action.REMOVE_PLAYER.ordinal());
         buf.writeVarInt(listed.size());
         listed.forEach(buf::writeUuid);
@@ -603,7 +610,7 @@ public class LegacyReplayServer extends IntegratedServer {
 
     private void clearScoreboard() throws IOException {
         for (String team : teams) {
-            PacketByteBuf buf = new PacketByteBuf(io.netty.buffer.Unpooled.buffer());
+            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
             buf.writeString(team);
             buf.writeByte(1);
             TeamS2CPacket packet = new TeamS2CPacket();
@@ -611,7 +618,7 @@ public class LegacyReplayServer extends IntegratedServer {
             getPlayerManager().sendPacket(packet, dimension);
         }
         for (String objective : objectives) {
-            PacketByteBuf buf = new PacketByteBuf(io.netty.buffer.Unpooled.buffer());
+            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
             buf.writeString(objective);
             buf.writeByte(1);
             ScoreboardObjectiveS2CPacket packet = new ScoreboardObjectiveS2CPacket();
@@ -620,7 +627,7 @@ public class LegacyReplayServer extends IntegratedServer {
         }
         teams.clear();
         objectives.clear();
-        PacketByteBuf buf = new PacketByteBuf(io.netty.buffer.Unpooled.buffer());
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeText(new LiteralText(""));
         buf.writeText(new LiteralText(""));
         TabListS2CPacket packet = new TabListS2CPacket();
@@ -643,13 +650,13 @@ public class LegacyReplayServer extends IntegratedServer {
 
     private void listPlayer(GameProfile profile) {
         if (!listed.add(profile.getId())) return;
-        PacketByteBuf buf = new PacketByteBuf(io.netty.buffer.Unpooled.buffer());
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeVarInt(PlayerInfoS2CPacket.Action.ADD_PLAYER.ordinal());
         buf.writeVarInt(1);
         buf.writeUuid(profile.getId());
         buf.writeString(profile.getName());
         buf.writeVarInt(profile.getProperties().size());
-        for (com.mojang.authlib.properties.Property property : profile.getProperties().values()) {
+        for (Property property : profile.getProperties().values()) {
             buf.writeString(property.getName());
             buf.writeString(property.getValue());
             buf.writeBoolean(property.hasSignature());
@@ -818,7 +825,7 @@ public class LegacyReplayServer extends IntegratedServer {
         resendChunk(x, z);
     }
 
-    private void setBlock(BlockPos pos, net.minecraft.block.state.BlockState state) {
+    private void setBlock(BlockPos pos, BlockState state) {
         ServerWorld world = world();
         WorldChunk chunk = world.getChunkAt(pos.getX() >> 4, pos.getZ() >> 4);
         recordedChunks.add(chunk);
@@ -871,7 +878,7 @@ public class LegacyReplayServer extends IntegratedServer {
         for (int i = 0; i < properties; i++) {
             String name = buf.readString(32767), value = buf.readString(32767);
             String signature = buf.readBoolean() ? buf.readString(32767) : null;
-            profile.getProperties().put(name, new com.mojang.authlib.properties.Property(name, value, signature));
+            profile.getProperties().put(name, new Property(name, value, signature));
         }
         buf.readVarInt();
         profiles.putIfAbsent(uuid, profile);

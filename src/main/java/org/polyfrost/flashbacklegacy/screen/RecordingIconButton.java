@@ -1,18 +1,18 @@
 package org.polyfrost.flashbacklegacy.screen;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.render.platform.GlStateManager;
+import net.minecraft.client.render.texture.DynamicTexture;
+import net.minecraft.resource.Identifier;
+
+import javax.imageio.ImageIO;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.imageio.ImageIO;
-
-import net.minecraft.client.render.platform.GlStateManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.texture.DynamicTexture;
-import net.minecraft.resource.Identifier;
 
 public class RecordingIconButton extends ButtonWidget {
     private static final Map<String, Identifier> ICONS = new HashMap<>();

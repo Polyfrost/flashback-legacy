@@ -2,6 +2,7 @@ package org.polyfrost.flashbacklegacy.shim.net.minecraft.client.gui;
 
 import com.moulberry.flashback.screen.RecoverRecordingsScreen;
 import com.moulberry.flashback.screen.SaveReplayScreen;
+import net.minecraft.client.Minecraft;
 import org.polyfrost.flashbacklegacy.FlashbackLegacy;
 import org.polyfrost.flashbacklegacy.screen.LegacyAlertScreen;
 import org.polyfrost.flashbacklegacy.screen.LegacyRecoverRecordingsScreen;
@@ -19,12 +20,12 @@ public class Gui {
     }
 
     public Screen screen() {
-        return net.minecraft.client.Minecraft.getInstance().screen == null ? null : Screen.VANILLA;
+        return Minecraft.getInstance().screen == null ? null : Screen.VANILLA;
     }
 
     public void setScreen(Screen screen) {
         if (screen == null || screen == Screen.VANILLA) return;
-        var mc = net.minecraft.client.Minecraft.getInstance();
+        var mc = Minecraft.getInstance();
         switch (screen) {
             case SaveReplayScreen save -> mc.openScreen(new LegacySaveReplayScreen(mc.screen, save));
             case RecoverRecordingsScreen recover -> mc.openScreen(new LegacyRecoverRecordingsScreen(mc.screen, recover));

@@ -1,16 +1,16 @@
 package org.polyfrost.flashbacklegacy.shim.net.minecraft.client.sounds;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
-
 import net.minecraft.client.Minecraft;
 import org.lwjgl.openal.AL10;
 import org.polyfrost.flashbacklegacy.mixin.SoundEngineAccessor;
 import org.polyfrost.flashbacklegacy.mixin.SoundManagerAccessor;
 import org.polyfrost.flashbacklegacy.shim.com.mojang.blaze3d.audio.Channel;
 import org.polyfrost.flashbacklegacy.shim.com.mojang.blaze3d.audio.Library;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 public class ChannelAccess {
     private final List<Channel> channels = new ArrayList<>();

@@ -1,7 +1,6 @@
 package org.polyfrost.flashbacklegacy.mixin;
 
 import com.moulberry.flashback.Flashback;
-import com.moulberry.flashback.combo_options.RecordingControlsLocation;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.menu.GameMenuScreen;

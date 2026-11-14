@@ -1,19 +1,19 @@
 package org.polyfrost.flashbacklegacy.shim.net.minecraft.client.multiplayer;
 
-import java.util.UUID;
-
-import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.Minecraft;
-
-import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.entity.player.Player;
-import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.level.entity.LevelEntityGetter;
-import java.util.List;
-
 import net.minecraft.client.world.ClientWorld;
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.Minecraft;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.core.Registry;
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.network.chat.Component;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.resources.Identifier;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.resources.ResourceKey;
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.TickRateManager;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.entity.Entity;
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.entity.player.Player;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.level.Level;
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.level.entity.LevelEntityGetter;
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.scores.Scoreboard;
+
+import java.util.UUID;
 
 public class ClientLevel extends Level {
     private static final ResourceKey<Registry<Level>> DIMENSION = ResourceKey.createRegistryKey(Identifier.withDefaultNamespace("dimension"));
@@ -26,12 +26,12 @@ public class ClientLevel extends Level {
     }
 
     @Override
-    public org.polyfrost.flashbacklegacy.shim.net.minecraft.world.scores.Scoreboard getScoreboard() {
-        return new org.polyfrost.flashbacklegacy.shim.net.minecraft.world.scores.Scoreboard(handle.getScoreboard());
+    public Scoreboard getScoreboard() {
+        return new Scoreboard(handle.getScoreboard());
     }
 
-    public org.polyfrost.flashbacklegacy.shim.net.minecraft.world.TickRateManager tickRateManager() {
-        return new org.polyfrost.flashbacklegacy.shim.net.minecraft.world.TickRateManager();
+    public TickRateManager tickRateManager() {
+        return new TickRateManager();
     }
 
     public static ClientLevel of(ClientWorld handle) {
@@ -45,7 +45,7 @@ public class ClientLevel extends Level {
     public void close() {
     }
 
-    public void disconnect(org.polyfrost.flashbacklegacy.shim.net.minecraft.network.chat.Component reason) {
+    public void disconnect(Component reason) {
         Minecraft.SCHEDULED.add(handle::disconnect);
     }
 

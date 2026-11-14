@@ -1,8 +1,5 @@
 package org.polyfrost.flashbacklegacy.record;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-
 import com.moulberry.flashback.Flashback;
 import com.moulberry.flashback.record.Recorder;
 import io.netty.buffer.ByteBuf;
@@ -13,6 +10,9 @@ import net.minecraft.network.packet.Packet;
 import org.polyfrost.flashbacklegacy.FlashbackLegacy;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.network.ConnectionProtocol;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.network.codec.StreamCodec;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
 
 public record LegacyPacket(int id, Body body) implements org.polyfrost.flashbacklegacy.shim.net.minecraft.network.protocol.Packet<Object> {
     public static final StreamCodec<ByteBuf, Object> CODEC = new StreamCodec<>() {

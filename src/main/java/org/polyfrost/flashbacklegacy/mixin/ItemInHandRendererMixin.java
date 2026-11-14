@@ -1,5 +1,6 @@
 package org.polyfrost.flashbacklegacy.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.living.player.ClientPlayerEntity;
 import net.minecraft.client.render.ItemInHandRenderer;
@@ -8,9 +9,8 @@ import net.minecraft.entity.living.player.PlayerEntity;
 import org.polyfrost.flashbacklegacy.playback.LegacyReplayServer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import com.llamalad7.mixinextras.sugar.Local;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(ItemInHandRenderer.class)
 public abstract class ItemInHandRendererMixin {

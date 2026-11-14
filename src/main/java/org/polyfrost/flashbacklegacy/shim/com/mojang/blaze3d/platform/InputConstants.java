@@ -1,10 +1,12 @@
 package org.polyfrost.flashbacklegacy.shim.com.mojang.blaze3d.platform;
 
-import java.lang.reflect.Method;
-
+import com.moulberry.flashback.utils.InputHelper;
+import net.minecraft.client.Minecraft;
 import org.lwjgl.sdl.SDLKeyboard;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.input.KeyEvent;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.network.chat.Component;
+
+import java.lang.reflect.Method;
 
 public class InputConstants {
     public static final Key UNKNOWN = new Key(Type.KEYBOARD, -1);
@@ -37,7 +39,7 @@ public class InputConstants {
     }
 
     public static void releaseMouse(Window window, double x, double y) {
-        net.minecraft.client.Minecraft.getInstance().unlockMouse();
+        Minecraft.getInstance().unlockMouse();
     }
 
     public enum Type {
@@ -69,7 +71,7 @@ public class InputConstants {
 
         public Component getDisplayName() {
             if (type == Type.MOUSE) return Component.literal("Mouse " + (value + 1));
-            int scancode = value >= SCANCODE_TO_LEGACY.length ? com.moulberry.flashback.utils.InputHelper.imguiKeyToSdlScancode(value) : value;
+            int scancode = value >= SCANCODE_TO_LEGACY.length ? InputHelper.imguiKeyToSdlScancode(value) : value;
             String name = scancode <= 0 ? null : SDLKeyboard.SDL_GetKeyName(SDLKeyboard.SDL_GetKeyFromScancode(scancode, (short) 0, false));
             return Component.literal(name == null || name.isEmpty() ? "?" : name);
         }

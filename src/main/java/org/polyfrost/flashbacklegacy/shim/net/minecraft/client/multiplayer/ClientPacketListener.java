@@ -1,8 +1,11 @@
 package org.polyfrost.flashbacklegacy.shim.net.minecraft.client.multiplayer;
 
-import java.util.Collection;
-
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.handler.ClientPlayNetworkHandler;
+import org.polyfrost.flashbacklegacy.playback.LegacyReplayServer;
+
+import java.util.Collection;
+import java.util.UUID;
 
 public class ClientPacketListener extends ClientCommonPacketListenerImpl {
     public final ClientPlayNetworkHandler handle;
@@ -12,8 +15,8 @@ public class ClientPacketListener extends ClientCommonPacketListenerImpl {
     }
 
     public void sendCommand(String command) {
-        if (command.startsWith("spectate ") && org.polyfrost.flashbacklegacy.playback.LegacyReplayServer.spectate(java.util.UUID.fromString(command.substring(9)))) return;
-        net.minecraft.client.Minecraft.getInstance().player.sendChat("/" + command);
+        if (command.startsWith("spectate ") && LegacyReplayServer.spectate(UUID.fromString(command.substring(9)))) return;
+        Minecraft.getInstance().player.sendChat("/" + command);
     }
 
     public Collection<PlayerInfo> getOnlinePlayers() {

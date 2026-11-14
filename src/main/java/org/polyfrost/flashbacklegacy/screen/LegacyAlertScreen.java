@@ -1,11 +1,11 @@
 package org.polyfrost.flashbacklegacy.screen;
 
-import java.util.List;
-
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.gui.screens.AlertScreen;
+
+import java.util.List;
 
 public class LegacyAlertScreen extends Screen {
     private final Screen parent;

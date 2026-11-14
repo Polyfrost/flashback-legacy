@@ -1,23 +1,27 @@
 package org.polyfrost.flashbacklegacy.shim.net.minecraft.client;
 
-import java.util.Queue;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
+import net.minecraft.client.gui.screen.menu.TitleScreen;
 import org.polyfrost.flashbacklegacy.playback.LegacyReplayServer;
 import org.polyfrost.flashbacklegacy.shim.com.mojang.authlib.GameProfile;
 import org.polyfrost.flashbacklegacy.shim.com.mojang.blaze3d.platform.TextInputManager;
 import org.polyfrost.flashbacklegacy.shim.com.mojang.blaze3d.platform.Window;
-import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.multiplayer.ClientPacketListener;
-import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.multiplayer.MultiPlayerGameMode;
-import org.polyfrost.flashbacklegacy.shim.net.minecraft.server.packs.resources.ResourceManager;
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.gui.Font;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.gui.Gui;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.multiplayer.ClientLevel;
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.multiplayer.ClientPacketListener;
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.multiplayer.ServerData;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.player.LocalPlayer;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.renderer.GameRenderer;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.server.IntegratedServer;
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.sounds.SoundManager;
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.server.Services;
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.server.packs.resources.ResourceManager;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.entity.Entity;
+
+import java.util.Queue;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Minecraft {
     private static final Minecraft INSTANCE = new Minecraft();
@@ -36,8 +40,8 @@ public class Minecraft {
         return net.minecraft.client.Minecraft.getInstance();
     }
 
-    public org.polyfrost.flashbacklegacy.shim.net.minecraft.client.gui.Font get$font() {
-        return org.polyfrost.flashbacklegacy.shim.net.minecraft.client.gui.Font.INSTANCE;
+    public Font get$font() {
+        return Font.INSTANCE;
     }
 
     public DeltaTracker.Timer get$deltaTracker() {
@@ -85,8 +89,8 @@ public class Minecraft {
         return manager == null ? null : new MultiPlayerGameMode(manager);
     }
 
-    public org.polyfrost.flashbacklegacy.shim.net.minecraft.server.Services services() {
-        return org.polyfrost.flashbacklegacy.shim.net.minecraft.server.Services.CLIENT;
+    public Services services() {
+        return Services.CLIENT;
     }
 
     public ClientPacketListener getConnection() {
@@ -94,8 +98,8 @@ public class Minecraft {
         return handler == null ? null : new ClientPacketListener(handler);
     }
 
-    public org.polyfrost.flashbacklegacy.shim.net.minecraft.client.sounds.SoundManager getSoundManager() {
-        return org.polyfrost.flashbacklegacy.shim.net.minecraft.client.sounds.SoundManager.INSTANCE;
+    public SoundManager getSoundManager() {
+        return SoundManager.INSTANCE;
     }
 
     public ResourceManager getResourceManager() {
@@ -126,7 +130,7 @@ public class Minecraft {
     public void disconnectWithProgressScreen() {
         SCHEDULED.add(() -> {
             mc().setWorld(null);
-            mc().openScreen(new net.minecraft.client.gui.screen.menu.TitleScreen());
+            mc().openScreen(new TitleScreen());
         });
     }
 

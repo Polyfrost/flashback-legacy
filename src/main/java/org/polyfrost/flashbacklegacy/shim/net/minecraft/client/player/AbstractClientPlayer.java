@@ -2,9 +2,9 @@ package org.polyfrost.flashbacklegacy.shim.net.minecraft.client.player;
 
 import net.minecraft.client.entity.living.player.ClientPlayerEntity;
 import net.minecraft.scoreboard.team.Team;
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.entity.player.Player;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.entity.player.PlayerSkin;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.scores.PlayerTeam;
-import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.entity.player.Player;
 
 public class AbstractClientPlayer extends Player {
     public AbstractClientPlayer(ClientPlayerEntity handle) {

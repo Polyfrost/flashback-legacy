@@ -5,11 +5,13 @@ import com.moulberry.flashback.Flashback;
 import com.moulberry.flashback.combo_options.MovementDirection;
 import com.moulberry.flashback.configuration.FlashbackConfigV1;
 import net.minecraft.client.entity.living.player.LocalClientPlayerEntity;
+import net.minecraft.client.render.model.PlayerModelPart;
 import net.minecraft.entity.living.LivingEntity;
 import net.minecraft.entity.living.player.PlayerAbilities;
 import net.minecraft.entity.living.player.PlayerEntity;
 import net.minecraft.world.World;
 import org.polyfrost.flashbacklegacy.FlashbackLegacy;
+import org.polyfrost.flashbacklegacy.editor.EntityOverrides;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.player.LocalPlayer;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.entity.Entity;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.phys.Vec3;
@@ -19,8 +21,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import net.minecraft.client.render.model.PlayerModelPart;
-import org.polyfrost.flashbacklegacy.editor.EntityOverrides;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity {

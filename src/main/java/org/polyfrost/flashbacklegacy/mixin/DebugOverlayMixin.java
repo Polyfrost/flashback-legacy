@@ -1,7 +1,5 @@
 package org.polyfrost.flashbacklegacy.mixin;
 
-import java.util.List;
-
 import net.minecraft.client.gui.overlay.DebugOverlay;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.gui.components.debug.DebugScreenEntries;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.gui.components.debug.DebugScreenEntry;
@@ -9,6 +7,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.List;
 
 @Mixin(DebugOverlay.class)
 public abstract class DebugOverlayMixin {

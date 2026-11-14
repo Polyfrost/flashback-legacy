@@ -1,9 +1,9 @@
 package org.polyfrost.flashbacklegacy.shim.com.mojang.blaze3d;
 
+import org.lwjgl.sdl.SDLMisc;
+
 import java.net.URI;
 import java.nio.file.Path;
-
-import org.lwjgl.sdl.SDLMisc;
 
 public class Blaze3D {
     public static void openUri(URI uri) {

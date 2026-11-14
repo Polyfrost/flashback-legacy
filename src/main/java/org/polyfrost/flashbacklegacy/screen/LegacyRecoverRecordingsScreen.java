@@ -1,7 +1,5 @@
 package org.polyfrost.flashbacklegacy.screen;
 
-import java.util.List;
-
 import com.moulberry.flashback.screen.RecoverRecordingsScreen;
 import com.moulberry.flashback.screen.RecoverRecordingsScreen.RecoveryOption;
 import net.minecraft.client.gui.screen.Screen;
@@ -9,6 +7,8 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.Formatting;
 import org.polyfrost.flashbacklegacy.mixin.flashback.RecoverRecordingsScreenAccessor;
+
+import java.util.List;
 
 public class LegacyRecoverRecordingsScreen extends Screen {
     private final Screen parent;

@@ -1,11 +1,11 @@
 package org.polyfrost.flashbacklegacy.shim.net.minecraft.client.renderer.texture;
 
-import java.nio.IntBuffer;
-import java.util.function.Supplier;
-
 import org.lwjgl.BufferUtils;
 import org.polyfrost.flashbacklegacy.shim.com.mojang.blaze3d.platform.NativeImage;
 import org.polyfrost.flashbacklegacy.shim.com.mojang.renderpearl.api.textures.GpuTextureView;
+
+import java.nio.IntBuffer;
+import java.util.function.Supplier;
 
 import static org.lwjgl.opengl.GL11.*;
 

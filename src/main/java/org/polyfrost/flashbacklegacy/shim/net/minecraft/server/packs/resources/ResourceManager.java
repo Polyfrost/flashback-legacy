@@ -1,8 +1,8 @@
 package org.polyfrost.flashbacklegacy.shim.net.minecraft.server.packs.resources;
 
-import java.util.Optional;
-
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.resources.Identifier;
+
+import java.util.Optional;
 
 public interface ResourceManager extends ResourceProvider {
     ResourceManager CLASSPATH = id -> {

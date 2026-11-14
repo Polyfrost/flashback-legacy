@@ -1,10 +1,10 @@
 package org.polyfrost.flashbacklegacy.shim.com.mojang.blaze3d.audio;
 
-import java.nio.ByteBuffer;
+import org.lwjgl.openal.AL10;
 
 import javax.sound.sampled.AudioFormat;
 
-import org.lwjgl.openal.AL10;
+import java.nio.ByteBuffer;
 
 public class SoundBuffer {
     private final ByteBuffer data;

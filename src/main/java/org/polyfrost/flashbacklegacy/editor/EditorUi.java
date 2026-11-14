@@ -2,36 +2,41 @@ package org.polyfrost.flashbacklegacy.editor;
 
 import com.moulberry.flashback.Flashback;
 import com.moulberry.flashback.combo_options.ExportProjection;
-import com.moulberry.flashback.exporting.ExportJob;
-import com.moulberry.flashback.exporting.ExportSettings;
-import java.util.Random;
-import net.minecraft.client.entity.particle.Particle;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import com.moulberry.flashback.editor.ui.CustomImGuiWindowerSdl;
 import com.moulberry.flashback.editor.ui.ReplayUI;
+import com.moulberry.flashback.exporting.ExportJob;
+import com.moulberry.flashback.exporting.ExportSettings;
 import com.moulberry.flashback.state.EditorState;
 import com.moulberry.flashback.state.EditorStateManager;
 import com.moulberry.flashback.visuals.ReplayVisuals;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.particle.Particle;
+import net.minecraft.client.render.platform.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityFilter;
 import net.minecraft.entity.living.player.PlayerEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.HitResult;
-import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.phys.EntityHitResult;
-import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.phys.Vec3;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.platform.GlStateManager;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.sdl.SDL_Event;
 import org.polyfrost.flashbacklegacy.FlashbackLegacy;
 import org.polyfrost.flashbacklegacy.mixin.MinecraftAccessor;
-import java.util.function.Predicate;
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.phys.EntityHitResult;
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.phys.Vec3;
 import pl.tomgirl.pylon.window.DisplaySdl;
 
-import static org.lwjgl.sdl.SDLEvents.*;
+import java.util.Random;
+import java.util.function.Predicate;
+
+import static org.lwjgl.sdl.SDLEvents.SDL_EVENT_KEY_DOWN;
+import static org.lwjgl.sdl.SDLEvents.SDL_EVENT_KEY_UP;
+import static org.lwjgl.sdl.SDLEvents.SDL_EVENT_MOUSE_BUTTON_DOWN;
+import static org.lwjgl.sdl.SDLEvents.SDL_EVENT_MOUSE_BUTTON_UP;
+import static org.lwjgl.sdl.SDLEvents.SDL_EVENT_MOUSE_WHEEL;
 
 public final class EditorUi {
     private static boolean started;

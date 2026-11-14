@@ -1,14 +1,14 @@
 package org.polyfrost.flashbacklegacy.mixin.flashback;
 
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.moulberry.flashback.io.ReplayCombiner;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 @Mixin(value = ReplayCombiner.class, remap = false)
 public class ReplayCombinerMixin {

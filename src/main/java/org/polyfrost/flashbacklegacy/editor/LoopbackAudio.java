@@ -1,10 +1,5 @@
 package org.polyfrost.flashbacklegacy.editor;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.util.concurrent.locks.LockSupport;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.sound.system.SoundEngine;
 import org.lwjgl.openal.ALC10;
@@ -12,6 +7,11 @@ import org.lwjgl.openal.SOFTLoopback;
 import org.lwjgl.system.MemoryStack;
 import org.polyfrost.flashbacklegacy.mixin.SoundEngineAccessor;
 import org.polyfrost.flashbacklegacy.mixin.SoundManagerAccessor;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+import java.util.concurrent.locks.LockSupport;
 
 public final class LoopbackAudio {
     private static volatile int channels;

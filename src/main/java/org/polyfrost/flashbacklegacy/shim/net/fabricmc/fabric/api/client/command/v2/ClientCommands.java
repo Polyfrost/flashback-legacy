@@ -7,8 +7,8 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Formatting;
+import net.minecraft.text.LiteralText;
 import org.polyfrost.flashbacklegacy.FlashbackLegacy;
 
 public final class ClientCommands {

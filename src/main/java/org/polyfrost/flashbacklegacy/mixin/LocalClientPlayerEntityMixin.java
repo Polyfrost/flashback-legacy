@@ -3,10 +3,11 @@ package org.polyfrost.flashbacklegacy.mixin;
 import net.minecraft.client.entity.living.player.LocalClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.s2c.play.SoundEventS2CPacket;
+import org.polyfrost.flashbacklegacy.playback.LegacyReplayServer;
 import org.polyfrost.flashbacklegacy.record.LegacyPacket;
 import org.polyfrost.flashbacklegacy.shim.net.fabricmc.fabric.api.client.command.v2.ClientCommands;
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
-import org.polyfrost.flashbacklegacy.playback.LegacyReplayServer;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -17,7 +18,7 @@ public abstract class LocalClientPlayerEntityMixin {
     private void flashback$clientCommand(String message, CallbackInfo ci) {
         if (message.startsWith("/flashback-legacy ")) {
             String[] args = message.substring(18).split(" ", 2);
-            org.polyfrost.flashbacklegacy.shim.net.minecraft.client.Minecraft.SCHEDULED.add(() -> LegacyReplayServer.command(args));
+            Minecraft.SCHEDULED.add(() -> LegacyReplayServer.command(args));
             ci.cancel();
         } else if (message.startsWith("/") && ClientCommands.execute(message.substring(1))) ci.cancel();
     }

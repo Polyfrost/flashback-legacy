@@ -1,5 +1,7 @@
 package org.polyfrost.flashbacklegacy.shim.net.minecraft.util;
 
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.TracingExecutor;
+
 public class Util {
     private static final OS PLATFORM = detect();
 
@@ -23,8 +25,8 @@ public class Util {
         return PLATFORM;
     }
 
-    public static org.polyfrost.flashbacklegacy.shim.net.minecraft.TracingExecutor backgroundExecutor() {
-        return org.polyfrost.flashbacklegacy.shim.net.minecraft.TracingExecutor.BACKGROUND;
+    public static TracingExecutor backgroundExecutor() {
+        return TracingExecutor.BACKGROUND;
     }
 
     public static long getMillis() {

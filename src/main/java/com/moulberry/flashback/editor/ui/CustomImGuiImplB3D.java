@@ -1,8 +1,5 @@
 package com.moulberry.flashback.editor.ui;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
 import imgui.moulberry90.ImDrawData;
 import imgui.moulberry90.ImFontAtlas;
 import imgui.moulberry90.ImVec4;
@@ -11,6 +8,9 @@ import org.lwjgl.system.MemoryUtil;
 import org.polyfrost.flashbacklegacy.shim.com.mojang.blaze3d.pipeline.RenderTarget;
 import org.polyfrost.flashbacklegacy.shim.com.mojang.renderpearl.api.textures.GpuTextureView;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.renderer.texture.DynamicTexture;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;

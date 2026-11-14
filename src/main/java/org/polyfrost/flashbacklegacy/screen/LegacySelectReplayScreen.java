@@ -1,21 +1,5 @@
 package org.polyfrost.flashbacklegacy.screen;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.text.SimpleDateFormat;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.Stream;
-
-import javax.imageio.ImageIO;
-
 import com.google.gson.JsonObject;
 import com.moulberry.flashback.Flashback;
 import com.moulberry.flashback.FlashbackGson;
@@ -34,6 +18,22 @@ import net.minecraft.resource.Identifier;
 import org.lwjgl.input.Keyboard;
 import org.polyfrost.flashbacklegacy.FlashbackLegacy;
 import org.polyfrost.flashbacklegacy.shim.com.mojang.blaze3d.Blaze3D;
+
+import javax.imageio.ImageIO;
+
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Stream;
 
 public class LegacySelectReplayScreen extends Screen {
     private static final int BACK = 0, OPEN = 1, FOLDER = 2, DELETE = 3, EDIT = 4, SORT = 5, DIRECTION = 6, SEARCH = 7, LOAD = 8, OPTIONS = 9;

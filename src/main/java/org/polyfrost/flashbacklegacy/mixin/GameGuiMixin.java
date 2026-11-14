@@ -1,5 +1,7 @@
 package org.polyfrost.flashbacklegacy.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.moulberry.flashback.Flashback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.living.player.ClientPlayerEntity;
@@ -9,6 +11,7 @@ import net.minecraft.client.gui.spectator.SpectatorGui;
 import net.minecraft.client.network.PlayerInfo;
 import net.minecraft.client.render.Window;
 import net.minecraft.world.WorldSettings;
+import org.objectweb.asm.Opcodes;
 import org.polyfrost.flashbacklegacy.FlashbackLegacy;
 import org.polyfrost.flashbacklegacy.editor.EditorUi;
 import org.polyfrost.flashbacklegacy.playback.LegacyReplayServer;
@@ -20,9 +23,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GameGui.class)

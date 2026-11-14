@@ -1,13 +1,13 @@
 package org.polyfrost.flashbacklegacy.shim.net.minecraft.client;
 
-import java.nio.ByteBuffer;
-import java.util.function.Consumer;
-
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 import org.polyfrost.flashbacklegacy.shim.com.mojang.blaze3d.pipeline.RenderTarget;
 import org.polyfrost.flashbacklegacy.shim.com.mojang.blaze3d.platform.NativeImage;
+
+import java.nio.ByteBuffer;
+import java.util.function.Consumer;
 
 public class Screenshot {
     public static void takeScreenshot(RenderTarget target, Consumer<NativeImage> consumer) {

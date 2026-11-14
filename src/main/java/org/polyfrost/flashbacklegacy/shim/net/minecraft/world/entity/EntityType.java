@@ -1,10 +1,10 @@
 package org.polyfrost.flashbacklegacy.shim.net.minecraft.world.entity;
 
-import java.util.Locale;
-
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.resources.Identifier;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.flag.FeatureElement;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.level.entity.EntityTypeTest;
+
+import java.util.Locale;
 
 public class EntityType<T> implements EntityTypeTest, FeatureElement {
     public final String key;

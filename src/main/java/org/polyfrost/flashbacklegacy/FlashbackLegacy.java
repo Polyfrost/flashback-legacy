@@ -1,13 +1,5 @@
 package org.polyfrost.flashbacklegacy;
 
-import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.HexFormat;
-
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 import net.fabricmc.loader.api.metadata.CustomValue;
@@ -17,6 +9,14 @@ import org.apache.logging.log4j.Logger;
 import org.polyfrost.flashbacklegacy.patch.FlashbackPatcher;
 import org.polyfrost.flashbacklegacy.patch.ShimStubs;
 import org.spongepowered.asm.mixin.Mixins;
+
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HexFormat;
 
 public final class FlashbackLegacy implements PreLaunchEntrypoint {
     public static final String MOD_ID = "flashback_legacy";

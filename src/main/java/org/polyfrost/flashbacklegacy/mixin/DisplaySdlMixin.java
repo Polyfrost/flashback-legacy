@@ -1,11 +1,11 @@
 package org.polyfrost.flashbacklegacy.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import org.lwjgl.sdl.SDL_Event;
 import org.polyfrost.flashbacklegacy.editor.EditorUi;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import pl.tomgirl.pylon.window.DisplaySdl;
 
 @Mixin(value = DisplaySdl.class, remap = false)

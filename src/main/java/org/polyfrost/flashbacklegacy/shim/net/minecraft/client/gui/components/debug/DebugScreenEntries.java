@@ -1,10 +1,10 @@
 package org.polyfrost.flashbacklegacy.shim.net.minecraft.client.gui.components.debug;
 
+import org.polyfrost.flashbacklegacy.shim.net.minecraft.resources.Identifier;
+
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import org.polyfrost.flashbacklegacy.shim.net.minecraft.resources.Identifier;
 
 public class DebugScreenEntries {
     public static final Map<Identifier, DebugScreenEntry> ENTRIES = new LinkedHashMap<>();

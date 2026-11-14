@@ -1,5 +1,7 @@
 package org.polyfrost.flashbacklegacy.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.server.world.chunk.ServerChunkCache;
 import net.minecraft.world.chunk.ChunkSource;
@@ -8,8 +10,6 @@ import org.polyfrost.flashbacklegacy.playback.LegacyReplayServer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
 @Mixin(ServerChunkCache.class)
 public abstract class ReplayChunkCacheMixin {

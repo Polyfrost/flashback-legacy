@@ -1,10 +1,10 @@
 package org.polyfrost.flashbacklegacy.shim.net.minecraft.network;
 
-import java.util.UUID;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.PacketByteBuf;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.resources.Identifier;
+
+import java.util.UUID;
 
 public class FriendlyByteBuf extends PacketByteBuf {
     public FriendlyByteBuf(ByteBuf parent) {

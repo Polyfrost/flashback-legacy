@@ -1,13 +1,5 @@
 package org.polyfrost.flashbacklegacy.screen;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.moulberry.flashback.Flashback;
 import com.moulberry.flashback.combo_options.ComboOption;
 import com.moulberry.lattice.annotation.LatticeCategory;
@@ -29,6 +21,14 @@ import net.minecraft.client.resource.language.I18n;
 import org.lwjgl.input.Keyboard;
 import org.polyfrost.flashbacklegacy.FlashbackLegacy;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.network.chat.Component;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class LegacyConfigScreen extends Screen {
     private static final int DONE = 0, PREVIOUS = 1, NEXT = 2, FIRST_OPTION = 3;

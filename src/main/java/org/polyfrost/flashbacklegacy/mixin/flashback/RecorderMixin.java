@@ -1,17 +1,5 @@
 package org.polyfrost.flashbacklegacy.mixin.flashback;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.UUID;
-import java.util.WeakHashMap;
-import java.util.concurrent.FutureTask;
-
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
@@ -22,6 +10,7 @@ import com.moulberry.flashback.io.AsyncReplaySaver;
 import com.moulberry.flashback.io.ReplayWriter;
 import com.moulberry.flashback.record.Recorder;
 import io.netty.buffer.Unpooled;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.living.player.LocalClientPlayerEntity;
 import net.minecraft.client.network.PlayerInfo;
@@ -29,11 +18,12 @@ import net.minecraft.client.network.handler.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.data.SyncedData;
-import net.minecraft.entity.living.player.HungerManager;
 import net.minecraft.entity.living.LivingEntity;
 import net.minecraft.entity.living.attribute.EntityAttributeContainer;
+import net.minecraft.entity.living.player.HungerManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.AttachEntityS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityAnimationS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityAttributesS2CPacket;
@@ -55,7 +45,6 @@ import net.minecraft.network.packet.s2c.play.TabListS2CPacket;
 import net.minecraft.network.packet.s2c.play.TeamS2CPacket;
 import net.minecraft.network.packet.s2c.play.WorldBorderS2CPacket;
 import net.minecraft.network.packet.s2c.play.WorldChunkS2CPacket;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.network.packet.s2c.play.WorldTimeS2CPacket;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardObjective;
@@ -83,6 +72,18 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.UUID;
+import java.util.WeakHashMap;
+import java.util.concurrent.FutureTask;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 @Mixin(value = Recorder.class, remap = false)
@@ -183,7 +184,7 @@ public abstract class RecorderMixin {
             packets.add(LegacyPacket.of(new WorldChunkS2CPacket(chunk, true, 0xFFFF)));
         }
         for (BlockEntity blockEntity : new ArrayList<>(world.blockEntities)) {
-            net.minecraft.network.packet.Packet<?> packet = blockEntity.createUpdatePacket();
+            Packet<?> packet = blockEntity.createUpdatePacket();
             if (packet != null) packets.add(LegacyPacket.of(packet));
         }
 

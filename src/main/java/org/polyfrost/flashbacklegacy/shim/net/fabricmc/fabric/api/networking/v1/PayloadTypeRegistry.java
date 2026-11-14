@@ -1,11 +1,11 @@
 package org.polyfrost.flashbacklegacy.shim.net.fabricmc.fabric.api.networking.v1;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.network.codec.StreamCodec;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.resources.Identifier;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public interface PayloadTypeRegistry {
     Map<Identifier, CustomPacketPayload.TypeAndCodec<?, ?>> CLIENTBOUND_PLAY = new HashMap<>();

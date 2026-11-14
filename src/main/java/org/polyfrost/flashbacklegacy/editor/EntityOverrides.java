@@ -4,15 +4,6 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.moulberry.flashback.FilePlayerSkin;
 import com.moulberry.flashback.state.EditorState;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import javax.imageio.ImageIO;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.living.player.ClientPlayerEntity;
 import net.minecraft.client.render.model.PlayerModelPart;
@@ -28,6 +19,17 @@ import org.polyfrost.flashbacklegacy.FlashbackLegacy;
 import org.polyfrost.flashbacklegacy.mixin.flashback.FilePlayerSkinAccessor;
 import org.polyfrost.flashbacklegacy.shim.com.mojang.authlib.GameProfile;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.entity.EquipmentSlot;
+
+import javax.imageio.ImageIO;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public final class EntityOverrides {
     public record Skin(Identifier skin, Identifier cape, String model) {

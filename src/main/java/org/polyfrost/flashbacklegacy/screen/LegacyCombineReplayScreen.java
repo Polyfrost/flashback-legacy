@@ -1,13 +1,5 @@
 package org.polyfrost.flashbacklegacy.screen;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
-
 import com.moulberry.flashback.Flashback;
 import com.moulberry.flashback.io.ReplayCombiner;
 import com.moulberry.flashback.utils.AsyncFileDialogs;
@@ -20,6 +12,14 @@ import org.lwjgl.input.Keyboard;
 import org.polyfrost.flashbacklegacy.FlashbackLegacy;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.gui.screens.AlertScreen;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.network.chat.Component;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 public class LegacyCombineReplayScreen extends Screen {
     private static final int FIRST = 0, SECOND = 1, OUTPUT = 2, COMBINE = 3, CANCEL = 4;

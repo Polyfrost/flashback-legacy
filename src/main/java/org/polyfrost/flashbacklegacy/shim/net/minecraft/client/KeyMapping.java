@@ -1,10 +1,5 @@
 package org.polyfrost.flashbacklegacy.shim.net.minecraft.client;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import net.minecraft.client.options.GameOptions;
 import net.minecraft.client.options.KeyBinding;
 import org.apache.commons.lang3.ArrayUtils;
@@ -12,6 +7,11 @@ import org.polyfrost.flashbacklegacy.shim.com.mojang.blaze3d.platform.InputConst
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.client.input.KeyEvent;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.network.chat.Component;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.resources.Identifier;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class KeyMapping implements Comparable<KeyMapping> {
     public static final List<KeyBinding> PENDING = new ArrayList<>();

@@ -1,9 +1,9 @@
 package org.polyfrost.flashbacklegacy.shim.net.minecraft.network;
 
-import java.util.function.Function;
-
 import io.netty.buffer.ByteBuf;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.core.RegistryAccess;
+
+import java.util.function.Function;
 
 public class RegistryFriendlyByteBuf extends FriendlyByteBuf {
     private final RegistryAccess registryAccess;

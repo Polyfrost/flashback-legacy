@@ -1,11 +1,11 @@
 package org.polyfrost.flashbacklegacy.shim.net.minecraft.core;
 
-import java.util.Map;
-import java.util.Set;
-
 import com.mojang.serialization.Keyable;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.resources.Identifier;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.resources.ResourceKey;
+
+import java.util.Map;
+import java.util.Set;
 
 public interface Registry<T> extends IdMap, Keyable, HolderLookup.RegistryLookup {
     Set<Identifier> keySet();
