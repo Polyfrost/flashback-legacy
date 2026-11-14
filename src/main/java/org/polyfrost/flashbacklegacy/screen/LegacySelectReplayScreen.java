@@ -20,7 +20,6 @@ import org.polyfrost.flashbacklegacy.FlashbackLegacy;
 import org.polyfrost.flashbacklegacy.shim.com.mojang.blaze3d.Blaze3D;
 
 import javax.imageio.ImageIO;
-
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;

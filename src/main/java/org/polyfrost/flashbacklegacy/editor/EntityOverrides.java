@@ -21,7 +21,6 @@ import org.polyfrost.flashbacklegacy.shim.com.mojang.authlib.GameProfile;
 import org.polyfrost.flashbacklegacy.shim.net.minecraft.world.entity.EquipmentSlot;
 
 import javax.imageio.ImageIO;
-
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.EnumSet;

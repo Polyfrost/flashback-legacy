@@ -87,7 +87,7 @@ tasks.withType<JavaCompile>().configureEach {
 
 spotless {
     java {
-        importOrder("", "javax", "java", "\\#")
+        importOrder("", "javax|java", "\\#")
         removeUnusedImports()
     }
 }
